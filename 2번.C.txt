@@ -2,33 +2,35 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
-    printf("hello, world (pid: %d)\n", (int) getpid());
-    int fo = open("test.txt",O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    printf("start (pid: %d)\n", (int) getpid());
+    int fo = open("test.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     
-    if(fo < 0){
+    if (fo < 0) {
         perror("open");
         exit(1);
     }
     
     int child = fork(); 
     
-    if (child < 0) { // 수정: rc -> child
+    if (child < 0) {
         fprintf(stderr, "fork failed\n");
-        exit(1); // 수정: 세미콜론 추가
-      
+        exit(1);
     } else if (child == 0) {
-        printf("hello, I am child (pid: %d)\n", (int) getpid());
+        printf("I am child (pid: %d)\n", (int) getpid());
         char* ch_text = "I am a boy";
-        wirte(fo, ch_text, strlen(ch_text));
-        
-    } else { // 수정: 조건이 누락된 부분 수정
-        printf("hello, I am parent (pid: %d) of (pid: %d) \n", child, (int) getpid());
+        printf("child text is : %s\n", ch_text); 
+
+        write(fo, ch_text, strlen(ch_text)); 
+    } else {
+        printf("hello, I am parent (pid: %d) of (pid: %d) \n", (int) getpid(), child);
         char* pa_text = "I am a mother";
-        wirte(fo, pa_text, strlen(parent_message));
-        
+        printf("parent text is : %s\n", pa_text); 
+
+        write(fo, pa_text, strlen(pa_text)); 
     }
     close(fo);
     return 0;
