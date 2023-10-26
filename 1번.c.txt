@@ -4,21 +4,28 @@
 
 int main(int argc, char *argv[])
 {
-    printf("hello, world (pid: %d)\n", (int) getpid());
+    printf("I am parent (pid: %d)\n", (int) getpid());
     int z = 300;
+    printf("z value seted!! z: %d \n", z);
+
     int child = fork(); 
-    printf("z: %d", z);
+
     if (child < 0) { 
         fprintf(stderr, "fork failed\n");
         exit(1); 
 
     } else if (child == 0) {
-        printf("hello, I am child (pid: %d)\n", (int) getpid());
-        int z = 150;
-        printf("z is changed: %d", z);
+        printf("I am child (pid: %d)\n", (int) getpid());
+        int old_z = 150;
+        printf("child z = %d", z);
+        
+        z = 150;
+        printf("z reseted!! z: $d -> %d", old_z, z);
+
         
     } else { 
-        printf("hello, I am parent (pid: %d) of (pid: %d) \n", child, (int) getpid());
+        z = 90;
+        printf("in parent z changed z : %d", z);
     }
     return 0;
 }
